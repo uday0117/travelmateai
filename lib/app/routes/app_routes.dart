@@ -1,0 +1,28 @@
+/// Application route path constants.
+abstract final class AppRoutes {
+  static const splash = '/splash';
+  static const onboarding = '/onboarding';
+  static const login = '/login';
+  static const register = '/register';
+  static const forgotPassword = '/forgot-password';
+  static const home = '/home';
+  static const settings = '/settings';
+  static const profile = '/profile';
+  static const trips = '/trips';
+  static const explore = '/explore';
+  static const createTrip = '/trips/create';
+  static const tripDetail = '/trips/detail';
+  static const expenses = '/expenses';
+  static const packing = '/packing';
+  static const journal = '/journal';
+  static const documents = '/documents';
+  static const aiHub = '/ai';
+  static const aiChat = '/ai/chat';
+  static const search = '/search';
+  static const maps = '/maps';
+  static const toolsHub = '/tools';
+  static const travelStats = '/profile/travel-stats';
+  static const countriesVisited = '/profile/countries';
+  static const privacyPolicy = '/legal/privacy';
+  static const termsOfService = '/legal/terms';
+}

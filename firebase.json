@@ -1,0 +1,37 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "travelmateai-f9b33",
+          "appId": "1:872642314665:android:f15804234c0f672867c4b8",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "travelmateai-f9b33",
+          "appId": "1:872642314665:ios:4a7463f413b0c4b967c4b8",
+          "uploadDebugSymbols": true,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/config/firebase_options.dart": {
+          "projectId": "travelmateai-f9b33",
+          "configurations": {
+            "android": "1:872642314665:android:f15804234c0f672867c4b8",
+            "ios": "1:872642314665:ios:4a7463f413b0c4b967c4b8"
+          }
+        }
+      }
+    }
+  }
+}

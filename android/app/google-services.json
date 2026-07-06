@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "872642314665",
+    "project_id": "travelmateai-f9b33",
+    "storage_bucket": "travelmateai-f9b33.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872642314665:android:f15804234c0f672867c4b8",
+        "android_client_info": {
+          "package_name": "com.uksolutions.travelmateai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872642314665-f49ksac3kfku24jijtpcfolbgndlbun7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uksolutions.travelmateai",
+            "certificate_hash": "042e44002b1ed5052dbfca478c2792bc6628a3d4"
+          }
+        },
+        {
+          "client_id": "872642314665-s7au3i4hp9oru0mhtjuc6i47mpgsack2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXoeRJXbJb8stwdjFPCLwHLDlmwbCawTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "872642314665-s7au3i4hp9oru0mhtjuc6i47mpgsack2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "872642314665-gtc54adk383eaql8aa3t12db0400tggv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.uksolutions.travelmateai.travelmateai"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
