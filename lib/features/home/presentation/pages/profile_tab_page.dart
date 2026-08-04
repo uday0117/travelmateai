@@ -8,8 +8,6 @@ import 'package:travelmateai/core/services/analytics_service.dart';
 import 'package:travelmateai/core/services/storage_service.dart';
 import 'package:travelmateai/core/theme/app_spacing.dart';
 import 'package:travelmateai/features/auth/presentation/controllers/auth_controller.dart';
-import 'package:travelmateai/features/expenses/presentation/pages/expenses_page.dart';
-import 'package:travelmateai/features/packing/presentation/pages/packing_page.dart';
 import 'package:travelmateai/features/trips/presentation/controllers/trips_controller.dart';
 
 class ProfileTabPage extends StatelessWidget {
@@ -24,7 +22,8 @@ class ProfileTabPage extends StatelessWidget {
     return Obx(() {
       final user = auth.user.value;
       final avatarPath = storage.profileAvatarPath;
-      final displayName = storage.profileDisplayName ?? user?.displayName ?? 'Traveler';
+      final displayName =
+          storage.profileDisplayName ?? user?.displayName ?? 'Traveler';
       return ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
@@ -38,14 +37,21 @@ class ProfileTabPage extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 48,
-                        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                        backgroundImage: avatarPath != null && avatarPath.isNotEmpty
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.primaryContainer,
+                        backgroundImage:
+                            avatarPath != null && avatarPath.isNotEmpty
                             ? FileImage(File(avatarPath))
-                            : (user?.photoUrl != null ? NetworkImage(user!.photoUrl!) : null),
+                            : (user?.photoUrl != null
+                                  ? NetworkImage(user!.photoUrl!)
+                                  : null),
                         child: avatarPath == null && user?.photoUrl == null
                             ? Text(
                                 user?.initials ?? 'T',
-                                style: Theme.of(context).textTheme.headlineMedium,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineMedium,
                               )
                             : null,
                       ),
@@ -65,7 +71,8 @@ class ProfileTabPage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   OutlinedButton.icon(
-                    onPressed: () => _updateDisplayName(context, storage, user?.displayName),
+                    onPressed: () =>
+                        _updateDisplayName(context, storage, user?.displayName),
                     icon: const Icon(Icons.edit_outlined),
                     label: const Text('Edit profile'),
                   ),
@@ -130,7 +137,7 @@ class ProfileTabPage extends StatelessWidget {
             icon: Icons.receipt_long_outlined,
             title: 'Expenses',
             subtitle: 'Track spending by category',
-            onTap: () => Get.to(() => const ExpensesPage()),
+            onTap: () => Get.toNamed(AppRoutes.expenses),
           ),
           _ToolTile(
             icon: Icons.folder_special_outlined,
@@ -142,7 +149,7 @@ class ProfileTabPage extends StatelessWidget {
             icon: Icons.luggage_outlined,
             title: 'Packing Lists',
             subtitle: 'Smart checklists for every trip',
-            onTap: () => Get.to(() => const PackingPage()),
+            onTap: () => Get.toNamed(AppRoutes.packing),
           ),
           const Divider(height: AppSpacing.xl),
           ListTile(
@@ -189,16 +196,19 @@ class ProfileTabPage extends StatelessWidget {
 
   Future<void> _pickAvatar(BuildContext context, StorageService storage) async {
     final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
     if (picked == null) return;
     await storage.setProfileAvatarPath(picked.path);
     if (Get.isRegistered<AnalyticsService>()) {
       await Get.find<AnalyticsService>().logProfileUpdated(source: 'avatar');
     }
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile photo updated')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Profile photo updated')));
     }
   }
 
@@ -217,7 +227,10 @@ class ProfileTabPage extends StatelessWidget {
           decoration: const InputDecoration(labelText: 'Display name'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, controller.text.trim()),
             child: const Text('Save'),
@@ -228,12 +241,14 @@ class ProfileTabPage extends StatelessWidget {
     if (result == null || result.trim().isEmpty) return;
     await storage.setProfileDisplayName(result);
     if (Get.isRegistered<AnalyticsService>()) {
-      await Get.find<AnalyticsService>().logProfileUpdated(source: 'display_name');
+      await Get.find<AnalyticsService>().logProfileUpdated(
+        source: 'display_name',
+      );
     }
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Profile updated')));
     }
   }
 }

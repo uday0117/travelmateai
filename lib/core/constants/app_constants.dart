@@ -26,7 +26,9 @@ abstract final class AppConstants {
   static const String userIdKey = 'user_id';
   static const String lastSyncKey = 'last_sync_at';
 
-  static const String privacyPolicyUrl = 'https://uksolutions.com/privacy';
-  static const String termsOfServiceUrl = 'https://uksolutions.com/terms';
+  static const String privacyPolicyUrl =
+      'https://uday0117.github.io/travelmateai/privacy_policy.html';
+  static const String termsOfServiceUrl =
+      'https://uday0117.github.io/travelmateai/terms_and_conditions.html';
   static const String supportEmail = 'support@uksolutions.com';
 }

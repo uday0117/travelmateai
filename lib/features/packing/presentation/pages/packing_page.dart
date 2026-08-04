@@ -297,7 +297,11 @@ class _CategoryGroupedItems extends StatelessWidget {
     // Render unchecked categories first, then done ones
     final orderedKeys = [
       ...grouped.keys.where((k) => grouped[k]!.any((i) => !i.isChecked)),
-      ...grouped.keys.where((k) => grouped[k]!.every((i) => i.isChecked)),
+      ...grouped.keys.where(
+        (k) =>
+            grouped[k]!.every((i) => i.isChecked) &&
+            !grouped[k]!.any((i) => !i.isChecked),
+      ),
     ];
 
     return Column(
