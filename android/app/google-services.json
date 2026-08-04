@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "872642314665-vurnb2uve8lp3g0aelqajgv0jceto354.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uksolutions.travelmateai",
+            "certificate_hash": "9559364162b8361f26081e2f21380d9e0fe0b75d"
+          }
+        },
+        {
           "client_id": "872642314665-s7au3i4hp9oru0mhtjuc6i47mpgsack2.apps.googleusercontent.com",
           "client_type": 3
         }

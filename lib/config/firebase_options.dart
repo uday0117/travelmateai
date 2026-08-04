@@ -34,6 +34,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '872642314665',
     projectId: 'travelmateai-f9b33',
     storageBucket: 'travelmateai-f9b33.firebasestorage.app',
+    iosClientId:
+        '872642314665-gtc54adk383eaql8aa3t12db0400tggv.apps.googleusercontent.com',
     iosBundleId: 'com.uksolutions.travelmateai.travelmateai',
   );
 }

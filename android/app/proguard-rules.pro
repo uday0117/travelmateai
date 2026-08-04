@@ -14,6 +14,12 @@
 -keep class com.google.android.gms.ads.** { *; }
 -dontwarn com.google.android.gms.ads.**
 
+# Google Sign-In
+-keep class com.google.android.gms.auth.** { *; }
+-keep class com.google.android.gms.common.** { *; }
+-keep class com.google.android.gms.signin.** { *; }
+-dontwarn com.google.android.gms.auth.**
+
 # Gson (used by Firebase)
 -keepattributes Signature
 -keepattributes *Annotation*

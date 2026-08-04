@@ -94,16 +94,16 @@ class _ExploreTabPageState extends State<ExploreTabPage>
       children: [
         Text(
           'Travel Inspiration',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
           'Trending destinations, weekend getaways & hidden gems',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: AppSpacing.lg),
         Card(
@@ -126,14 +126,16 @@ class _ExploreTabPageState extends State<ExploreTabPage>
                       children: [
                         Text(
                           'AI Destination Ideas',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         Text(
                           'Get personalized recommendations from Gemini',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                         ),
                       ],
@@ -166,14 +168,16 @@ class _ExploreTabPageState extends State<ExploreTabPage>
                       children: [
                         Text(
                           'Travel Tools',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         Text(
                           'Visa checker, phrasebook, emergency contacts & more',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                         ),
                       ],
@@ -264,7 +268,9 @@ class _ExploreTabPageState extends State<ExploreTabPage>
                   '${w.temperature.toStringAsFixed(1)}°C',
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
-                Text(w.description[0].toUpperCase() + w.description.substring(1)),
+                Text(
+                  w.description[0].toUpperCase() + w.description.substring(1),
+                ),
                 Text('Humidity ${w.humidity}% · Wind ${w.windSpeed} m/s'),
               ],
             ),
@@ -341,8 +347,8 @@ class _ExploreTabPageState extends State<ExploreTabPage>
               child: Text(
                 '${(amount * rate).toStringAsFixed(2)} $_to',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
           ),

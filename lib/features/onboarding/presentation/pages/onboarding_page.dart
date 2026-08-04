@@ -15,101 +15,130 @@ class OnboardingPage extends GetView<OnboardingController> {
     final pageController = PageController();
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () async {
-                  await controller.completeOnboarding();
-                  Get.offAllNamed(AppRoutes.login);
-                },
-                child: const Text('Skip'),
-              ),
-            ),
-            Expanded(
-              child: PageView.builder(
-                controller: pageController,
-                itemCount: OnboardingController.pages.length,
-                onPageChanged: (index) => controller.currentPage.value = index,
-                itemBuilder: (context, index) {
-                  final page = OnboardingController.pages[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(AppSpacing.xl),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 140,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primaryContainer
-                                .withValues(alpha: 0.5),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            page.icon,
-                            size: 64,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ).animate().scale(curve: Curves.easeOutBack),
-                        const SizedBox(height: AppSpacing.xl),
-                        Text(
-                          page.title,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        Text(
-                          page.subtitle,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            height: 1.5,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            SmoothPageIndicator(
-              controller: pageController,
-              count: OnboardingController.pages.length,
-              effect: WormEffect(
-                dotHeight: 8,
-                dotWidth: 8,
-                activeDotColor: Theme.of(context).colorScheme.primary,
-                dotColor: Theme.of(context).colorScheme.outlineVariant,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Obx(() {
-                final isLast =
-                    controller.currentPage.value == OnboardingController.pages.length - 1;
-                return AppPrimaryButton(
-                  label: isLast ? 'Get Started' : 'Next',
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
                   onPressed: () async {
-                    if (isLast) {
-                      await controller.completeOnboarding();
-                      Get.offAllNamed(AppRoutes.login);
-                    } else {
-                      pageController.nextPage(
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.easeInOut,
-                      );
-                    }
+                    await controller.completeOnboarding();
+                    Get.offAllNamed(AppRoutes.login);
                   },
-                );
-              }),
-            ),
-          ],
+                  child: const Text('Skip'),
+                ),
+              ),
+              Expanded(
+                child: PageView.builder(
+                  controller: pageController,
+                  itemCount: OnboardingController.pages.length,
+                  onPageChanged: (index) =>
+                      controller.currentPage.value = index,
+                  itemBuilder: (context, index) {
+                    final page = OnboardingController.pages[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(AppSpacing.xl),
+                      child: Center(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.xl),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 140,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer
+                                        .withValues(alpha: 0.5),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    page.icon,
+                                    size: 64,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                ).animate().scale(curve: Curves.easeOutBack),
+                                const SizedBox(height: AppSpacing.xl),
+                                Text(
+                                  page.title,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
+                                      ?.copyWith(fontWeight: FontWeight.w800),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                                Text(
+                                  page.subtitle,
+                                  style: Theme.of(context).textTheme.bodyLarge
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                        height: 1.5,
+                                      ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SmoothPageIndicator(
+                controller: pageController,
+                count: OnboardingController.pages.length,
+                effect: WormEffect(
+                  dotHeight: 8,
+                  dotWidth: 8,
+                  activeDotColor: Theme.of(context).colorScheme.primary,
+                  dotColor: Theme.of(context).colorScheme.outlineVariant,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Obx(() {
+                  final isLast =
+                      controller.currentPage.value ==
+                      OnboardingController.pages.length - 1;
+                  return AppPrimaryButton(
+                    label: isLast ? 'Get Started' : 'Next',
+                    onPressed: () async {
+                      if (isLast) {
+                        await controller.completeOnboarding();
+                        Get.offAllNamed(AppRoutes.login);
+                      } else {
+                        pageController.nextPage(
+                          duration: const Duration(milliseconds: 350),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

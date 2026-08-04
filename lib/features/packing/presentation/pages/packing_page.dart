@@ -38,6 +38,7 @@ class PackingPage extends GetView<PackingController> {
             icon: Icons.luggage_outlined,
             actionLabel: 'Create List',
             onAction: controller.createForCurrentTrip,
+            tip: 'Tip: create a list for each trip so you can reuse it later.',
           );
         }
 
@@ -50,24 +51,28 @@ class PackingPage extends GetView<PackingController> {
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
               child: Text('${list.checkedItems}/${list.totalItems} packed'),
             ),
-            ...list.items.map((item) => CheckboxListTile(
-                  value: item.isChecked,
-                  onChanged: (_) => controller.toggleItem(list, item.id),
-                  title: Text(item.title),
-                  subtitle: Text(item.category.name),
-                )),
+            ...list.items.map(
+              (item) => CheckboxListTile(
+                value: item.isChecked,
+                onChanged: (_) => controller.toggleItem(list, item.id),
+                title: Text(item.title),
+                subtitle: Text(item.category.name),
+              ),
+            ),
             const SizedBox(height: AppSpacing.md),
             OutlinedButton.icon(
               onPressed: () => _addItem(context, list),
               icon: const Icon(Icons.add),
               label: const Text('Add Custom Item'),
             ),
-            Obx(() => controller.isGenerating.value
-                ? const Padding(
-                    padding: EdgeInsets.all(AppSpacing.lg),
-                    child: Center(child: CircularProgressIndicator()),
-                  )
-                : const SizedBox.shrink()),
+            Obx(
+              () => controller.isGenerating.value
+                  ? const Padding(
+                      padding: EdgeInsets.all(AppSpacing.lg),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : const SizedBox.shrink(),
+            ),
           ],
         );
       }),
@@ -80,9 +85,15 @@ class PackingPage extends GetView<PackingController> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Add Item'),
-        content: TextField(controller: ctrl, decoration: const InputDecoration(labelText: 'Item name')),
+        content: TextField(
+          controller: ctrl,
+          decoration: const InputDecoration(labelText: 'Item name'),
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
             onPressed: () {
               controller.addCustomItem(list, ctrl.text);

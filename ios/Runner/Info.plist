@@ -50,6 +50,22 @@
 		<string>TravelMate AI accesses your photo library to attach travel documents and journal photos.</string>
 		<key>NSFaceIDUsageDescription</key>
 		<string>TravelMate AI uses Face ID to protect your document vault.</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.872642314665-gtc54adk383eaql8aa3t12db0400tggv</string>
+				</array>
+			</dict>
+		</array>
+		<key>GIDClientID</key>
+		<string>872642314665-gtc54adk383eaql8aa3t12db0400tggv.apps.googleusercontent.com</string>
+		<!-- Same Maps key used on Android; enable Maps SDK for iOS on this key in Google Cloud. -->
+		<key>GMSApiKey</key>
+		<string>AIzaSyAXoeRJXbJb8stwdjFPCLwHLDlmwbCawTc</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>

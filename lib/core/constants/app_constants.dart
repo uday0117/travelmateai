@@ -19,6 +19,8 @@ abstract final class AppConstants {
   static const double tabletMaxWidth = 1200;
 
   static const String onboardingCompleteKey = 'onboarding_complete';
+  static const String profileAvatarPathKey = 'profile_avatar_path';
+  static const String profileDisplayNameKey = 'profile_display_name';
   static const String themeModeKey = 'theme_mode';
   static const String authTokenKey = 'auth_token';
   static const String userIdKey = 'user_id';

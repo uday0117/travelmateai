@@ -39,6 +39,7 @@ class JournalPage extends GetView<JournalController> {
             icon: Icons.menu_book_outlined,
             actionLabel: 'Write Entry',
             onAction: () => _addNote(context),
+            tip: 'Tip: jot down small moments while they are fresh — they make the best memories.',
           );
         }
 

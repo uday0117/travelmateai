@@ -114,6 +114,12 @@ class SettingsPage extends GetView<SettingsController> {
               onTap: controller.isSyncing.value ? null : controller.restoreFromCloud,
             ),
           ),
+          ListTile(
+            leading: const Icon(Icons.download_outlined),
+            title: const Text('Export trip data'),
+            subtitle: const Text('Save a local JSON backup of your trips'),
+            onTap: controller.exportTripData,
+          ),
           const SizedBox(height: AppSpacing.lg),
           Text(
             'About',

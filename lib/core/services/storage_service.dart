@@ -13,6 +13,26 @@ class StorageService {
   Future<void> setOnboardingComplete(bool value) =>
       _box.write(AppConstants.onboardingCompleteKey, value);
 
+  String? get profileAvatarPath => _box.read<String>(AppConstants.profileAvatarPathKey);
+
+  Future<void> setProfileAvatarPath(String? path) async {
+    if (path == null || path.isEmpty) {
+      await _box.remove(AppConstants.profileAvatarPathKey);
+      return;
+    }
+    await _box.write(AppConstants.profileAvatarPathKey, path);
+  }
+
+  String? get profileDisplayName => _box.read<String>(AppConstants.profileDisplayNameKey);
+
+  Future<void> setProfileDisplayName(String? name) async {
+    if (name == null || name.trim().isEmpty) {
+      await _box.remove(AppConstants.profileDisplayNameKey);
+      return;
+    }
+    await _box.write(AppConstants.profileDisplayNameKey, name.trim());
+  }
+
   String? get themeMode => _box.read<String>(AppConstants.themeModeKey);
 
   Future<void> setThemeMode(String mode) =>

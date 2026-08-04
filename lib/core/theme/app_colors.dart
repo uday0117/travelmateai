@@ -3,7 +3,7 @@ abstract final class AppColors {
   // Primary — deep teal (travel, trust)
   static const primary = 0xFF006D77;
   static const primaryLight = 0xFF83C5BE;
-  static const primaryDark = 0xFF004E57;
+  static const primaryDark = 0xFF003B43;
 
   // Secondary — warm coral (energy, adventure)
   static const secondary = 0xFFE29578;
@@ -15,17 +15,17 @@ abstract final class AppColors {
 
   // Neutrals
   static const backgroundLight = 0xFFF8FAFB;
-  static const backgroundDark = 0xFF0F1419;
+  static const backgroundDark = 0xFF060B14;
   static const surfaceLight = 0xFFFFFFFF;
-  static const surfaceDark = 0xFF1A2332;
+  static const surfaceDark = 0xFF101826;
   static const cardLight = 0xFFFFFFFF;
-  static const cardDark = 0xFF1E2A3A;
+  static const cardDark = 0xFF142133;
 
   // Text
   static const textPrimaryLight = 0xFF1A1D21;
   static const textSecondaryLight = 0xFF6B7280;
-  static const textPrimaryDark = 0xFFF3F4F6;
-  static const textSecondaryDark = 0xFF9CA3AF;
+  static const textPrimaryDark = 0xFFF5F7FA;
+  static const textSecondaryDark = 0xFF8D97A8;
 
   // Semantic
   static const success = 0xFF10B981;
@@ -35,5 +35,5 @@ abstract final class AppColors {
 
   // Glassmorphism
   static const glassLight = 0xCCFFFFFF;
-  static const glassDark = 0xCC1A2332;
+  static const glassDark = 0xCC111B2A;
 }

@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:travelmateai/app/routes/app_routes.dart';
+import 'package:travelmateai/core/services/analytics_service.dart';
+import 'package:travelmateai/core/services/storage_service.dart';
 import 'package:travelmateai/core/theme/app_spacing.dart';
 import 'package:travelmateai/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:travelmateai/features/expenses/presentation/pages/expenses_page.dart';
@@ -14,52 +19,83 @@ class ProfileTabPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = Get.find<AuthController>();
     final trips = Get.find<TripsController>();
+    final storage = Get.find<StorageService>();
 
     return Obx(() {
       final user = auth.user.value;
+      final avatarPath = storage.profileAvatarPath;
+      final displayName = storage.profileDisplayName ?? user?.displayName ?? 'Traveler';
       return ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
-          Center(
-            child: CircleAvatar(
-              radius: 48,
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              backgroundImage:
-                  user?.photoUrl != null ? NetworkImage(user!.photoUrl!) : null,
-              child: user?.photoUrl == null
-                  ? Text(
-                      user?.initials ?? 'T',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    )
-                  : null,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Center(
-            child: Text(
-              user?.displayName ?? 'Traveler',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 48,
+                        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                        backgroundImage: avatarPath != null && avatarPath.isNotEmpty
+                            ? FileImage(File(avatarPath))
+                            : (user?.photoUrl != null ? NetworkImage(user!.photoUrl!) : null),
+                        child: avatarPath == null && user?.photoUrl == null
+                            ? Text(
+                                user?.initials ?? 'T',
+                                style: Theme.of(context).textTheme.headlineMedium,
+                              )
+                            : null,
+                      ),
+                      IconButton.filledTonal(
+                        onPressed: () => _pickAvatar(context, storage),
+                        icon: const Icon(Icons.camera_alt_outlined),
+                        tooltip: 'Upload profile photo',
+                      ),
+                    ],
                   ),
-            ),
-          ),
-          if (user?.email != null) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Center(
-              child: Text(
-                user!.email!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    displayName,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  OutlinedButton.icon(
+                    onPressed: () => _updateDisplayName(context, storage, user?.displayName),
+                    icon: const Icon(Icons.edit_outlined),
+                    label: const Text('Edit profile'),
+                  ),
+                  if (user?.email != null) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      user!.email!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
-          ],
+          ),
           const SizedBox(height: AppSpacing.lg),
           Row(
             children: [
-              Expanded(child: _ProfileStat(label: 'Trips', value: '${trips.totalTrips}')),
               Expanded(
-                child: _ProfileStat(label: 'Destinations', value: '${trips.countriesCount}'),
+                child: _ProfileStat(
+                  label: 'Trips',
+                  value: '${trips.totalTrips}',
+                ),
+              ),
+              Expanded(
+                child: _ProfileStat(
+                  label: 'Destinations',
+                  value: '${trips.countriesCount}',
+                ),
               ),
               Expanded(
                 child: _ProfileStat(
@@ -73,9 +109,9 @@ class ProfileTabPage extends StatelessWidget {
           Text(
             'Travel Tools',
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           const SizedBox(height: AppSpacing.sm),
           _ToolTile(
@@ -118,7 +154,9 @@ class ProfileTabPage extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.emoji_events_outlined),
             title: const Text('Travel Stats'),
-            subtitle: Text('${trips.totalTrips} trips · ${trips.countriesCount} destinations'),
+            subtitle: Text(
+              '${trips.totalTrips} trips · ${trips.countriesCount} destinations',
+            ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Get.toNamed(AppRoutes.travelStats),
           ),
@@ -131,7 +169,10 @@ class ProfileTabPage extends StatelessWidget {
           ),
           const Divider(height: AppSpacing.xl),
           ListTile(
-            leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+            leading: Icon(
+              Icons.logout,
+              color: Theme.of(context).colorScheme.error,
+            ),
             title: Text(
               'Sign Out',
               style: TextStyle(color: Theme.of(context).colorScheme.error),
@@ -145,6 +186,56 @@ class ProfileTabPage extends StatelessWidget {
       );
     });
   }
+
+  Future<void> _pickAvatar(BuildContext context, StorageService storage) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    if (picked == null) return;
+    await storage.setProfileAvatarPath(picked.path);
+    if (Get.isRegistered<AnalyticsService>()) {
+      await Get.find<AnalyticsService>().logProfileUpdated(source: 'avatar');
+    }
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile photo updated')),
+      );
+    }
+  }
+
+  Future<void> _updateDisplayName(
+    BuildContext context,
+    StorageService storage,
+    String? currentName,
+  ) async {
+    final controller = TextEditingController(text: currentName ?? 'Traveler');
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Update profile name'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(labelText: 'Display name'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (result == null || result.trim().isEmpty) return;
+    await storage.setProfileDisplayName(result);
+    if (Get.isRegistered<AnalyticsService>()) {
+      await Get.find<AnalyticsService>().logProfileUpdated(source: 'display_name');
+    }
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated')),
+      );
+    }
+  }
 }
 
 class _ProfileStat extends StatelessWidget {
@@ -154,20 +245,24 @@ class _ProfileStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-            ),
-            Text(label, style: Theme.of(context).textTheme.bodySmall),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+          ),
+          Text(label, style: Theme.of(context).textTheme.bodySmall),
+        ],
       ),
     );
   }

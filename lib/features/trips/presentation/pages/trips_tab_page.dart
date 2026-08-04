@@ -87,6 +87,9 @@ class TripsTabPage extends GetView<TripsController> {
                   icon: Icons.card_travel_outlined,
                   actionLabel: 'Create Trip',
                   onAction: () => Get.toNamed(AppRoutes.createTrip),
+                  tip: controller.showArchived.value
+                      ? 'Tips: archive trips you no longer need to keep the list tidy.'
+                      : 'Tip: add a few trip details so TravelMate AI can help you plan smarter.',
                 );
               }
 

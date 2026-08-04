@@ -100,6 +100,9 @@ class TripFormController extends GetxController {
           destination: created.destination,
           startDate: created.startDate,
         );
+        if (Get.isRegistered<AnalyticsService>()) {
+          await Get.find<AnalyticsService>().logReminderScheduled(tripId: created.id);
+        }
       }
       Get.context?.showAppSnackBar(
         isEditing.value ? 'Trip updated' : 'Trip created',

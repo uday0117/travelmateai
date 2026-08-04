@@ -107,6 +107,24 @@ class AnalyticsService {
         parameters: {AnalyticsParams.feature: feature},
       );
 
+  Future<void> logOnboardingCompleted() => logEvent(
+        name: AnalyticsEvents.onboardingCompleted,
+      );
+
+  Future<void> logProfileUpdated({String? source}) => logEvent(
+        name: AnalyticsEvents.profileUpdated,
+        parameters: source != null ? {AnalyticsParams.source: source} : null,
+      );
+
+  Future<void> logDataExported() => logEvent(
+        name: AnalyticsEvents.dataExported,
+      );
+
+  Future<void> logReminderScheduled({required String tripId}) => logEvent(
+        name: AnalyticsEvents.reminderScheduled,
+        parameters: {AnalyticsParams.tripId: tripId},
+      );
+
   Future<void> logAdClicked({required String adType}) => logEvent(
         name: AnalyticsEvents.adClicked,
         parameters: {AnalyticsParams.adType: adType},

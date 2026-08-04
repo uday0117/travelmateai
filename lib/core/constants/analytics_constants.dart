@@ -13,6 +13,10 @@ abstract final class AnalyticsEvents {
   static const weatherViewed = 'weather_viewed';
   static const currencyConverted = 'currency_converted';
   static const aiUsed = 'ai_used';
+  static const onboardingCompleted = 'onboarding_completed';
+  static const profileUpdated = 'profile_updated';
+  static const dataExported = 'data_exported';
+  static const reminderScheduled = 'reminder_scheduled';
   static const adClicked = 'ad_clicked';
 }
 
@@ -22,6 +26,7 @@ abstract final class AnalyticsParams {
   static const query = 'query';
   static const resultCount = 'result_count';
   static const feature = 'feature';
+  static const source = 'source';
   static const adType = 'ad_type';
   static const fromCurrency = 'from_currency';
   static const toCurrency = 'to_currency';

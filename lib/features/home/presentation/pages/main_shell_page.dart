@@ -6,7 +6,7 @@ import 'package:travelmateai/features/home/presentation/pages/explore_tab_page.d
 import 'package:travelmateai/features/home/presentation/pages/home_dashboard_page.dart';
 import 'package:travelmateai/features/home/presentation/pages/journal_tab_page.dart';
 import 'package:travelmateai/features/home/presentation/pages/profile_tab_page.dart';
-import 'package:travelmateai/features/home/presentation/pages/trips_tab_page.dart';
+import 'package:travelmateai/features/trips/presentation/pages/trips_tab_page.dart';
 
 /// Main shell — Home, Trips, Explore, Journal, Profile.
 class MainShellPage extends GetView<HomeController> {
@@ -32,7 +32,6 @@ class MainShellPage extends GetView<HomeController> {
           selectedIndex: controller.currentIndex.value,
           onDestinationSelected: (index) {
             controller.changeTab(index);
-            // Gentle interstitial when switching tabs (not on first load).
             if (index == 2 && Get.isRegistered<AdMobService>()) {
               Get.find<AdMobService>().showInterstitial();
             }

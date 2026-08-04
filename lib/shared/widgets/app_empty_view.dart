@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travelmateai/core/theme/app_spacing.dart';
 
-/// Beautiful empty state with illustration placeholder.
+/// Reusable empty-state card with optional guidance and CTA.
 class AppEmptyView extends StatelessWidget {
   const AppEmptyView({
     super.key,
@@ -10,6 +10,7 @@ class AppEmptyView extends StatelessWidget {
     this.icon = Icons.explore_outlined,
     this.actionLabel,
     this.onAction,
+    this.tip,
   });
 
   final String title;
@@ -17,6 +18,7 @@ class AppEmptyView extends StatelessWidget {
   final IconData icon;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final String? tip;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +37,7 @@ class AppEmptyView extends StatelessWidget {
                 color: colorScheme.primaryContainer.withValues(alpha: 0.4),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                size: 56,
-                color: colorScheme.primary,
-              ),
+              child: Icon(icon, size: 56, color: colorScheme.primary),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
@@ -59,6 +57,23 @@ class AppEmptyView extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
+            if (tip != null) ...[
+              const SizedBox(height: AppSpacing.md),
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.tips_and_updates_outlined, color: colorScheme.primary),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(child: Text(tip!)),
+                  ],
+                ),
+              ),
+            ],
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: AppSpacing.lg),
               FilledButton(onPressed: onAction, child: Text(actionLabel!)),
@@ -69,3 +84,4 @@ class AppEmptyView extends StatelessWidget {
     );
   }
 }
+

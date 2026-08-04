@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:travelmateai/core/theme/app_spacing.dart';
 import 'package:travelmateai/features/expenses/domain/entities/expense.dart';
-import 'package:travelmateai/features/expenses/presentation/bindings/expenses_binding.dart';
 import 'package:travelmateai/features/expenses/presentation/controllers/expenses_controller.dart';
 import 'package:travelmateai/shared/widgets/app_empty_view.dart';
 import 'package:travelmateai/shared/widgets/app_loading_view.dart';
@@ -14,7 +13,6 @@ class ExpensesPage extends GetView<ExpensesController> {
 
   @override
   Widget build(BuildContext context) {
-    ExpensesBinding().dependencies();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expenses'),
@@ -55,13 +53,21 @@ class ExpensesPage extends GetView<ExpensesController> {
             icon: Icons.receipt_long_outlined,
             actionLabel: 'Add Expense',
             onAction: () => _showAddDialog(context),
+            tip:
+                'Tip: add one expense after each purchase to keep your budget realistic.',
           );
         }
 
         final categories = controller.byCategory;
         final colors = [
-          Colors.blue, Colors.green, Colors.orange, Colors.purple,
-          Colors.red, Colors.teal, Colors.amber, Colors.grey,
+          Colors.blue,
+          Colors.green,
+          Colors.orange,
+          Colors.purple,
+          Colors.red,
+          Colors.teal,
+          Colors.amber,
+          Colors.grey,
         ];
 
         return ListView(
@@ -78,7 +84,8 @@ class ExpensesPage extends GetView<ExpensesController> {
                     ),
                     Text(
                       '\$${controller.total.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
                             fontWeight: FontWeight.w800,
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -97,10 +104,14 @@ class ExpensesPage extends GetView<ExpensesController> {
                       final i = e.key.index;
                       return PieChartSectionData(
                         value: e.value,
-                        title: '${(e.value / controller.total * 100).toStringAsFixed(0)}%',
+                        title:
+                            '${(e.value / controller.total * 100).toStringAsFixed(0)}%',
                         color: colors[i % colors.length],
                         radius: 60,
-                        titleStyle: const TextStyle(fontSize: 12, color: Colors.white),
+                        titleStyle: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
                       );
                     }).toList(),
                   ),
@@ -108,20 +119,24 @@ class ExpensesPage extends GetView<ExpensesController> {
               ),
             ],
             const SizedBox(height: AppSpacing.lg),
-            ...controller.expenses.map((e) => Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Icon(_iconFor(e.category), size: 20),
-                    ),
-                    title: Text(e.title),
-                    subtitle: Text('${e.category.label} · ${DateFormat.MMMd().format(e.date)}'),
-                    trailing: Text(
-                      '${e.currency} ${e.amount.toStringAsFixed(2)}',
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    onLongPress: () => controller.deleteExpense(e.id),
+            ...controller.expenses.map(
+              (e) => Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    child: Icon(_iconFor(e.category), size: 20),
                   ),
-                )),
+                  title: Text(e.title),
+                  subtitle: Text(
+                    '${e.category.label} · ${DateFormat.MMMd().format(e.date)}',
+                  ),
+                  trailing: Text(
+                    '${e.currency} ${e.amount.toStringAsFixed(2)}',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  onLongPress: () => controller.deleteExpense(e.id),
+                ),
+              ),
+            ),
             const SizedBox(height: 80),
           ],
         );
@@ -130,15 +145,15 @@ class ExpensesPage extends GetView<ExpensesController> {
   }
 
   IconData _iconFor(ExpenseCategory c) => switch (c) {
-        ExpenseCategory.flights => Icons.flight,
-        ExpenseCategory.hotels => Icons.hotel,
-        ExpenseCategory.food => Icons.restaurant,
-        ExpenseCategory.taxi => Icons.local_taxi,
-        ExpenseCategory.fuel => Icons.local_gas_station,
-        ExpenseCategory.shopping => Icons.shopping_bag,
-        ExpenseCategory.activities => Icons.local_activity,
-        ExpenseCategory.miscellaneous => Icons.more_horiz,
-      };
+    ExpenseCategory.flights => Icons.flight,
+    ExpenseCategory.hotels => Icons.hotel,
+    ExpenseCategory.food => Icons.restaurant,
+    ExpenseCategory.taxi => Icons.local_taxi,
+    ExpenseCategory.fuel => Icons.local_gas_station,
+    ExpenseCategory.shopping => Icons.shopping_bag,
+    ExpenseCategory.activities => Icons.local_activity,
+    ExpenseCategory.miscellaneous => Icons.more_horiz,
+  };
 
   void _showAddDialog(BuildContext context) {
     final titleCtrl = TextEditingController();
@@ -152,7 +167,10 @@ class ExpensesPage extends GetView<ExpensesController> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: titleCtrl, decoration: const InputDecoration(labelText: 'Title')),
+            TextField(
+              controller: titleCtrl,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
             TextField(
               controller: amountCtrl,
               keyboardType: TextInputType.number,
@@ -168,7 +186,10 @@ class ExpensesPage extends GetView<ExpensesController> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
             onPressed: () async {
               await controller.addExpense(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:travelmateai/core/services/analytics_service.dart';
 import 'package:travelmateai/core/services/storage_service.dart';
 
 class OnboardingController extends GetxController {
@@ -43,6 +44,9 @@ class OnboardingController extends GetxController {
 
   Future<void> completeOnboarding() async {
     await _storageService.setOnboardingComplete(true);
+    if (Get.isRegistered<AnalyticsService>()) {
+      await Get.find<AnalyticsService>().logOnboardingCompleted();
+    }
   }
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:travelmateai/config/env_config.dart';
 import 'package:travelmateai/core/services/analytics_service.dart';
 import 'package:travelmateai/core/theme/app_spacing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -40,20 +39,8 @@ class _MapsViewState extends State<MapsView> {
 
   @override
   Widget build(BuildContext context) {
-    final hasKey = EnvConfig.googleMapsApiKey.isNotEmpty;
-
     return Column(
       children: [
-        if (!hasKey)
-          MaterialBanner(
-            content: const Text('Add GOOGLE_MAPS_API_KEY to .env for live maps'),
-            actions: [
-              TextButton(
-                onPressed: () => ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
         Expanded(
           child: GoogleMap(
             initialCameraPosition: const CameraPosition(

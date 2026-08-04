@@ -8,16 +8,24 @@ import 'package:travelmateai/features/auth/presentation/controllers/auth_control
 class AuthBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AuthRepository>(
-      () => AuthRepositoryImpl(
-        databaseService: Get.isRegistered<DatabaseService>()
-            ? Get.find<DatabaseService>()
-            : null,
-        storageService: Get.isRegistered<StorageService>()
-            ? Get.find<StorageService>()
-            : null,
-      ),
-    );
-    Get.lazyPut<AuthController>(() => AuthController(Get.find()));
+    if (!Get.isRegistered<AuthRepository>()) {
+      Get.put<AuthRepository>(
+        AuthRepositoryImpl(
+          databaseService: Get.isRegistered<DatabaseService>()
+              ? Get.find<DatabaseService>()
+              : null,
+          storageService: Get.isRegistered<StorageService>()
+              ? Get.find<StorageService>()
+              : null,
+        ),
+        permanent: true,
+      );
+    }
+    if (!Get.isRegistered<AuthController>()) {
+      Get.put<AuthController>(
+        AuthController(Get.find()),
+        permanent: true,
+      );
+    }
   }
 }

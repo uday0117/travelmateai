@@ -6,16 +6,12 @@ import 'package:travelmateai/app/routes/app_routes.dart';
 import 'package:travelmateai/core/constants/home_constants.dart';
 import 'package:travelmateai/core/theme/app_spacing.dart';
 import 'package:travelmateai/features/expenses/presentation/controllers/expenses_controller.dart';
-import 'package:travelmateai/features/expenses/presentation/pages/expenses_page.dart';
 import 'package:travelmateai/features/home/presentation/controllers/home_controller.dart';
 import 'package:travelmateai/features/home/presentation/widgets/home_dashboard_widgets.dart';
-import 'package:travelmateai/features/journal/presentation/pages/journal_page.dart';
-import 'package:travelmateai/features/packing/presentation/pages/packing_page.dart';
 import 'package:travelmateai/features/trips/domain/entities/trip.dart';
 import 'package:travelmateai/features/trips/presentation/controllers/trips_controller.dart';
 import 'package:travelmateai/features/trips/presentation/widgets/trip_card.dart';
 import 'package:travelmateai/shared/widgets/ad_banner_widget.dart';
-import 'package:travelmateai/shared/widgets/glass_container.dart';
 import 'package:travelmateai/shared/widgets/responsive_layout.dart';
 
 /// Google Travel–inspired home dashboard with all travel-at-a-glance sections.
@@ -74,6 +70,64 @@ class HomeDashboardPage extends GetView<HomeController> {
                     _QuickActionsGrid(),
                     const SizedBox(height: AppSpacing.lg),
 
+                    // Starter guidance card
+                    Obx(() {
+                      final hasTrips = trips.totalTrips > 0;
+                      if (hasTrips) return const SizedBox.shrink();
+                      return Container(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusLg,
+                          ),
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.primaryContainer,
+                              Theme.of(context).colorScheme.secondaryContainer,
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Start your first trip',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              'Create a trip, then use AI to plan your itinerary, packing list, and budget.',
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Wrap(
+                              spacing: AppSpacing.sm,
+                              children: [
+                                FilledButton.icon(
+                                  onPressed: () =>
+                                      Get.toNamed(AppRoutes.createTrip),
+                                  icon: const Icon(Icons.add_circle_outline),
+                                  label: const Text('Create Trip'),
+                                ),
+                                OutlinedButton.icon(
+                                  onPressed: () => Get.toNamed(AppRoutes.aiHub),
+                                  icon: const Icon(Icons.auto_awesome_outlined),
+                                  label: const Text('Open AI'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: AppSpacing.lg),
+
                     // Upcoming Trips
                     HomeSectionHeader(
                       title: 'Upcoming Trips',
@@ -81,17 +135,22 @@ class HomeDashboardPage extends GetView<HomeController> {
                       onAction: () => controller.changeTab(1),
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Obx(() => _TripSection(
-                          trips: trips.upcomingTrips,
-                          emptyTitle: 'No upcoming trips',
-                          emptySubtitle:
-                              'Create your first trip and let AI plan the perfect itinerary.',
-                        )),
+                    Obx(() {
+                      final upcomingTrips = trips.upcomingTrips.toList();
+                      final _ = trips.upcomingTrips.length;
+                      return _TripSection(
+                        trips: upcomingTrips,
+                        emptyTitle: 'No upcoming trips',
+                        emptySubtitle:
+                            'Create your first trip and let AI plan the perfect itinerary.',
+                      );
+                    }),
                     const SizedBox(height: AppSpacing.lg),
 
                     // Continue Planning
                     Obx(() {
                       final planning = trips.planningTrips;
+                      final _ = trips.upcomingTrips.length;
                       if (planning.isEmpty) return const SizedBox.shrink();
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,14 +159,21 @@ class HomeDashboardPage extends GetView<HomeController> {
                           const SizedBox(height: AppSpacing.sm),
                           Text(
                             'Finish setting up these trips',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                 ),
                           ),
                           const SizedBox(height: AppSpacing.md),
-                          ...planning.take(2).map(
+                          ...planning
+                              .take(2)
+                              .map(
                                 (trip) => Padding(
-                                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                                  padding: const EdgeInsets.only(
+                                    bottom: AppSpacing.sm,
+                                  ),
                                   child: _PlanningCard(trip: trip),
                                 ),
                               ),
@@ -123,7 +189,11 @@ class HomeDashboardPage extends GetView<HomeController> {
                       onAction: () => controller.changeTab(1),
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Obx(() => _HorizontalTripList(trips: trips.recentTrips)),
+                    Obx(() {
+                      final recentTrips = trips.recentTrips.toList();
+                      final _ = trips.recentTrips.length;
+                      return _HorizontalTripList(trips: recentTrips);
+                    }),
                     const SizedBox(height: AppSpacing.lg),
 
                     // Travel Tips
@@ -134,12 +204,15 @@ class HomeDashboardPage extends GetView<HomeController> {
 
                     // Recently Visited Places
                     Obx(() {
-                      final places = controller.visitedPlaces;
+                      final places = controller.visitedPlaces.toList();
+                      final _ = controller.visitedPlaces.length;
                       if (places.isEmpty) return const SizedBox.shrink();
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const HomeSectionHeader(title: 'Recently Visited Places'),
+                          const HomeSectionHeader(
+                            title: 'Recently Visited Places',
+                          ),
                           const SizedBox(height: AppSpacing.md),
                           SizedBox(
                             height: 44,
@@ -151,8 +224,13 @@ class HomeDashboardPage extends GetView<HomeController> {
                               itemBuilder: (context, i) {
                                 final place = places[i];
                                 return Chip(
-                                  avatar: const Icon(Icons.place_outlined, size: 18),
-                                  label: Text('${place.name}, ${place.country}'),
+                                  avatar: const Icon(
+                                    Icons.place_outlined,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    '${place.name}, ${place.country}',
+                                  ),
                                 );
                               },
                             ),
@@ -164,7 +242,8 @@ class HomeDashboardPage extends GetView<HomeController> {
 
                     // Recently Viewed Destinations
                     Obx(() {
-                      final recent = controller.recentDestinations;
+                      final recent = controller.recentDestinations.toList();
+                      final _ = controller.recentDestinations.length;
                       if (recent.isEmpty) return const SizedBox.shrink();
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +269,8 @@ class HomeDashboardPage extends GetView<HomeController> {
                                     Theme.of(context).colorScheme.primary,
                                     Theme.of(context).colorScheme.secondary,
                                   ],
-                                  onTap: () => Get.toNamed(AppRoutes.createTrip),
+                                  onTap: () =>
+                                      Get.toNamed(AppRoutes.createTrip),
                                 );
                               },
                             ),
@@ -206,8 +286,8 @@ class HomeDashboardPage extends GetView<HomeController> {
                     Text(
                       'Destinations picked for you',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     SizedBox(
@@ -215,7 +295,8 @@ class HomeDashboardPage extends GetView<HomeController> {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: HomeConstants.aiSuggestions.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
+                        separatorBuilder: (_, _) =>
+                            const SizedBox(width: AppSpacing.sm),
                         itemBuilder: (context, i) {
                           final s = HomeConstants.aiSuggestions[i];
                           return HomeDestinationCard(
@@ -240,7 +321,8 @@ class HomeDashboardPage extends GetView<HomeController> {
                       final stats = controller.travelStats.value;
                       return HomeTravelStatsGrid(
                         totalTrips: stats?.totalTrips ?? trips.totalTrips,
-                        countries: stats?.totalCountries ?? trips.countriesCount,
+                        countries:
+                            stats?.totalCountries ?? trips.countriesCount,
                         daysTraveled: stats?.totalDaysTraveled ?? 0,
                         totalBudget: stats?.totalExpenses ?? 0,
                       );
@@ -269,17 +351,33 @@ class _SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: GlassContainer(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+          border: Border.all(
+            color: Theme.of(
+              context,
+            ).colorScheme.outlineVariant.withValues(alpha: 0.35),
+          ),
+        ),
         child: Row(
           children: [
-            Icon(Icons.search_rounded, color: Theme.of(context).colorScheme.primary),
+            Icon(
+              Icons.search_rounded,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
                 'Search trips, destinations, journal…',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
             Icon(
@@ -342,22 +440,22 @@ class _ActiveTripHero extends StatelessWidget {
               Text(
                 trip.destination,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               Text(
                 trip.title,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
                 '$daysLeft day${daysLeft == 1 ? '' : 's'} remaining',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.85),
-                    ),
+                  color: Colors.white.withValues(alpha: 0.85),
+                ),
               ),
             ],
           ),
@@ -371,8 +469,9 @@ class _WeatherCurrencySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final home = Get.find<HomeController>();
-    final expenses =
-        Get.isRegistered<ExpensesController>() ? Get.find<ExpensesController>() : null;
+    final expenses = Get.isRegistered<ExpensesController>()
+        ? Get.find<ExpensesController>()
+        : null;
 
     return Obx(() {
       final weather = home.weather.value;
@@ -396,7 +495,10 @@ class _WeatherCurrencySection extends StatelessWidget {
                           size: 20,
                         ),
                         const SizedBox(width: AppSpacing.xs),
-                        Text('Weather', style: Theme.of(context).textTheme.labelLarge),
+                        Text(
+                          'Weather',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.xs),
@@ -413,8 +515,8 @@ class _WeatherCurrencySection extends StatelessWidget {
                       Text(
                         '${weather.city} · ${weather.humidity}% humidity',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ],
@@ -438,12 +540,17 @@ class _WeatherCurrencySection extends StatelessWidget {
                           size: 20,
                         ),
                         const SizedBox(width: AppSpacing.xs),
-                        Text('Currency', style: Theme.of(context).textTheme.labelLarge),
+                        Text(
+                          'Currency',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
-                      eurRate != null ? '1 USD = ${eurRate.toStringAsFixed(2)} EUR' : 'Loading…',
+                      eurRate != null
+                          ? '1 USD = ${eurRate.toStringAsFixed(2)} EUR'
+                          : 'Loading…',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: AppSpacing.xs),
@@ -451,8 +558,8 @@ class _WeatherCurrencySection extends StatelessWidget {
                       () => Text(
                         '\$${expenses?.total.toStringAsFixed(0) ?? '0'} spent',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ],
@@ -493,19 +600,19 @@ class _QuickActionsGrid extends StatelessWidget {
           icon: Icons.luggage_outlined,
           label: 'Packing',
           color: Theme.of(context).colorScheme.tertiaryContainer,
-          onTap: () => Get.to(() => const PackingPage()),
+          onTap: () => Get.toNamed(AppRoutes.packing),
         ),
         _QuickAction(
           icon: Icons.menu_book_outlined,
           label: 'Journal',
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          onTap: () => Get.to(() => const JournalPage()),
+          onTap: () => Get.toNamed(AppRoutes.journal),
         ),
         _QuickAction(
           icon: Icons.account_balance_wallet_outlined,
           label: 'Expenses',
           color: Theme.of(context).colorScheme.secondaryContainer,
-          onTap: () => Get.to(() => const ExpensesPage()),
+          onTap: () => Get.toNamed(AppRoutes.expenses),
         ),
         _QuickAction(
           icon: Icons.widgets_outlined,
@@ -545,9 +652,7 @@ class _QuickAction extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.55),
-          ),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.55)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -556,9 +661,9 @@ class _QuickAction extends StatelessWidget {
               const Spacer(),
               Text(
                 label,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -599,8 +704,8 @@ class _TripSection extends StatelessWidget {
                 emptySubtitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
               FilledButton.icon(
@@ -638,8 +743,8 @@ class _HorizontalTripList extends StatelessWidget {
       return Text(
         'Your recent trips will appear here',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
       );
     }
 

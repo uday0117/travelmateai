@@ -37,4 +37,15 @@ void main() {
     expect(controller.themeMode.value, ThemeMode.dark);
     expect(storage.themeMode, 'dark');
   });
+
+  test('StorageService persists onboarding and profile avatar values', () async {
+    Get.put<GetStorage>(GetStorage(), permanent: true);
+    final storage = StorageService(Get.find());
+
+    await storage.setOnboardingComplete(true);
+    await storage.setProfileAvatarPath('/tmp/avatar.png');
+
+    expect(storage.hasCompletedOnboarding, isTrue);
+    expect(storage.profileAvatarPath, '/tmp/avatar.png');
+  });
 }

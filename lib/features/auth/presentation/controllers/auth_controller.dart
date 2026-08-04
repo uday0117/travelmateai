@@ -82,6 +82,7 @@ class AuthController extends GetxController {
       final result = await action();
       return result.fold(
         (failure) {
+          if (_isUserCancellation(failure)) return false;
           Get.context?.showAppSnackBar(
             ErrorMapper.userMessage(failure),
             isError: true,
@@ -89,6 +90,8 @@ class AuthController extends GetxController {
           return false;
         },
         (_) {
+          // Ensure UI has the signed-in user immediately (don't wait on stream).
+          user.value = _authRepository.currentUser ?? user.value;
           if (loginMethod != null && Get.isRegistered<AnalyticsService>()) {
             Get.find<AnalyticsService>().logLogin(method: loginMethod);
           }
@@ -98,5 +101,16 @@ class AuthController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  bool _isUserCancellation(Failure failure) {
+    if (failure is! AuthFailure) return false;
+    final code = failure.code?.toLowerCase() ?? '';
+    final message = failure.message.toLowerCase();
+    return code == 'cancelled' ||
+        code.contains('canceled') ||
+        code.contains('cancelled') ||
+        message.contains('cancelled') ||
+        message.contains('canceled');
   }
 }
